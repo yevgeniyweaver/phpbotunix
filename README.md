@@ -11,3 +11,5 @@ docker-compose exec fpm /bin/bash
 composer install
 
 php artisan migrate
+
+php artisan db:seed
