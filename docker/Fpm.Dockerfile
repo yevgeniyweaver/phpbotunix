@@ -1,6 +1,6 @@
 FROM php:7.4-fpm
 
-COPY /composer.json /composer.lock /var/www/crmex/
+COPY /composer.json /composer.lock /var/www/phpunix/
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
         git \
@@ -15,6 +15,12 @@ RUN apt-get update && apt-get install -y \
         npm \
         mc
 
+RUN apt-get update && apt-get install -y cron
+# Add docker custom crontab
+ADD phpunix_crontab /etc/cron.d/phpunix_crontab
+# Specify crontab file for running
+RUN crontab /etc/cron.d/phpunix_crontab
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -28,7 +34,7 @@ RUN docker-php-ext-configure zip
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-WORKDIR /var/www/crmex
+WORKDIR /var/www/phpunix
 
 # Add user for laravel application
 #RUN groupadd -g 1000 www
@@ -38,17 +44,19 @@ WORKDIR /var/www/crmex
 RUN usermod -u 1000 www-data
 
 # Copy existing application directory contents
-COPY . /var/www/crmex
+COPY . /var/www/phpunix
 # Copy existing application directory permissions
 #COPY --chown=www:www . /var/www
-COPY --chown=www-data:www-data . /var/www/crmex
+COPY --chown=www-data:www-data . /var/www/phpunix
 USER www-data
 
 #RUN chmod go+w /var/www/crmex/storage/logs/laravel.log
-RUN chmod -R o+w /var/www/crmex/storage/
+RUN chmod -R o+w /var/www/phpunix/storage/
 #chown -R www-data:www-data /var/www/crmex/storage \
 #chown -R www-data:www-data storage &&
 
 # Expose port 9000 and start php-fpm server
 EXPOSE 9000
 CMD ["php-fpm"]
+# execute crontab
+CMD ["cron", "-f"]
