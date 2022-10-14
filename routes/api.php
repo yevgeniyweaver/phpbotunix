@@ -19,21 +19,4 @@ use Illuminate\Support\Facades\Route;
 //});
 
 
-Route::group([
-//    'namespace' => 'API\V1',
-    'prefix' => 'user',
-    'middleware' => 'auth_api', //auth:api
-], function () {
-    Route::get('{id}', function ($id) {
-        $user = \App\Models\User::find($id);
-        if (!$user) {
-            return response('wrong', 404);
-        }
-
-        return $user;
-    });
-    //Route::get('show/{id}', 'SspController@show')->middleware('role:dev');
-});
-
-
 

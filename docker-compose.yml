@@ -10,14 +10,14 @@ services:
     links:
       - fpm
     volumes:
-      - ./:/var/www/crmex
+      - ./:/var/www/phpunix
   fpm:
     build:
       context: .
       dockerfile: docker/Fpm.Dockerfile
     #entrypoint: sh /bin/run.sh
     volumes:
-      - ./:/var/www/crmex
+      - ./:/var/www/phpunix
       - ./scripts/phpEntry.sh:/bin/run.sh
     env_file:
       - '.env'
@@ -30,15 +30,14 @@ services:
     ports:
       - "3308:3306"
     environment:
-      MYSQL_DATABASE: crmex
+      MYSQL_DATABASE: phpunix
       MYSQL_ROOT_PASSWORD: 1111
     volumes:
-      #- ./mysqldata:/docker-entrypoint-initdb.d
       - ./mysqldata:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: crmex_pma
+    container_name: phpunix_pma
     links:
       - mysql
     environment:
