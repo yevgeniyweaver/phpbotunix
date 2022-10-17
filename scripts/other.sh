@@ -1,2 +1,4 @@
-#!/bin/bash
-echo Another script run!
+whoami \
+&& cd docker \
+&& pwd \
+&& echo "Other"

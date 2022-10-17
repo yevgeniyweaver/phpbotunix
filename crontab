@@ -1,5 +1,7 @@
+# my_laravel_docker_crontab
 # m h  dom mon dow   command
 # An empty line is required at the end of this file for a valid cron file.
-#* * * * * cd /var/www/phpunix/ && php artisan schedule:run >> /var/log/cron.log 2>&1
+#* * * * * cd /var/www/phpunix/ && which php && php artisan schedule:run >> /var/log/cron.log 2>&1
 * * * * * cd /var/www/phpunix/ && php artisan schedule:run >> /dev/null 2>&1
+#
 
