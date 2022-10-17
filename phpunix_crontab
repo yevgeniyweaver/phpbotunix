@@ -1,3 +1,0 @@
-# my_laravel_docker_crontab
-# m h  dom mon dow   command
-* * * * * cd /var/www/phpunix/ && php artisan schedule:run >> /dev/null 2>&1

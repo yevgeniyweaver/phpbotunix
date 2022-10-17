@@ -5,6 +5,7 @@ COPY /composer.json /composer.lock /var/www/phpunix/
 RUN apt-get update && apt-get install -y \
         git \
         curl \
+        nano \
         libpng-dev \
         libonig-dev \
         libxml2-dev \
@@ -15,12 +16,16 @@ RUN apt-get update && apt-get install -y \
         npm \
         mc
 
-RUN apt-get update && apt-get install -y cron
+#        cron \
+#RUN apt-get update && apt-get install -y cron
 # Add docker custom crontab
-ADD phpunix_crontab /etc/cron.d/phpunix_crontab
-# Specify crontab file for running
-RUN crontab /etc/cron.d/phpunix_crontab
-
+#ADD crontab /etc/cron.d/crontab
+#RUN chmod 0644 /etc/cron.d/crontab
+## Specify crontab file for running
+#RUN /usr/bin/crontab  /etc/cron.d/crontab
+#RUN touch /var/log/cron.log
+#crontab
+#COPY crontab /etc/crontabs/root
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -55,8 +60,11 @@ RUN chmod -R o+w /var/www/phpunix/storage/
 #chown -R www-data:www-data /var/www/crmex/storage \
 #chown -R www-data:www-data storage &&
 
+#CMD ["cron", "-f"]
+#CMD printenv > /etc/environment && echo “cron starting…” && (cron) && : > /var/log/cron.log && tail -f /var/log/cron.log
+
 # Expose port 9000 and start php-fpm server
-EXPOSE 9000
-CMD ["php-fpm"]
+#EXPOSE 9000
+#CMD ["php-fpm"]
 # execute crontab
-CMD ["cron", "-f"]
+

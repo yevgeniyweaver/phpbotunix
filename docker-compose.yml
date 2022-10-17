@@ -11,6 +11,8 @@ services:
       - fpm
     volumes:
       - ./:/var/www/phpunix
+    networks:
+        - laravel
   fpm:
     build:
       context: .
@@ -19,10 +21,14 @@ services:
     volumes:
       - ./:/var/www/phpunix
       - ./scripts/phpEntry.sh:/bin/run.sh
+    ports:
+        - "9000:9000"
     env_file:
       - '.env'
     depends_on:
       - mysql
+    networks:
+        - laravel
   mysql:
     image: mysql:5.7
     restart: unless-stopped
@@ -35,6 +41,8 @@ services:
     volumes:
       - ./mysqldata:/var/lib/mysql
       - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+        - laravel
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: phpunix_pma
@@ -47,8 +55,19 @@ services:
     restart: always
     ports:
       - "8081:80"
-
+  cron:
+      build:
+          context: .
+          dockerfile: cron.dockerfile
+      container_name: cron
+      volumes:
+          - ./:/var/www/phpunix
+      networks:
+          - laravel
 #Volumes
 volumes:
   mysqldata:
     driver: local
+
+networks:
+    laravel:
